@@ -1,0 +1,36 @@
+# Ignore unnecessary files and directories
+
+# Nginx logs
+/logs/*
+/var/log/nginx/*
+
+# Git-related files
+.git
+.gitignore
+
+# Node modules and build directories
+node_modules
+build
+dist
+
+# Temporary files and directories
+tmp
+temp
+*.tmp
+*.swp
+*.swo
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Configuration backups
+*.bak
+*.old
+*.orig
+
+# Editor and IDE files
+*.idea
+*.vscode
+*.sublime-project
+*.sublime-workspace

@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
 
   # Main services
@@ -13,6 +11,8 @@ services:
     networks:
       - mynetwork
     restart: always
+    depends_on:
+      - mariadb
 
   mariadb:
     build: ./requirements/mariadb
@@ -23,7 +23,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./requirements/mariadb/conf/custom-mariadb.cnf:/etc/mysql/my.cnf
+      - ./requirements/mariadb/conf/mariadb.cnf:/etc/mysql/my.cnf
     networks:
       - mynetwork
     restart: always
@@ -42,37 +42,37 @@ services:
     restart: always
   
   # Bonus services
-  redis:
-    build: ./requirements/bonus/redis
-    networks:
-      - mynetwork
-    restart: always
+  # redis:
+  #   build: ./requirements/bonus/redis
+  #   networks:
+  #     - mynetwork
+  #   restart: always
 
-  ftp:
-    build: ./requirements/bonus/ftp
-    ports:
-      - "21:21"
-    networks:
-      - mynetwork
-    volumes:
-      - wordpress_files:/var/www/html
-    restart: always
+  # ftp:
+  #   build: ./requirements/bonus/ftp
+  #   ports:
+  #     - "21:21"
+  #   networks:
+  #     - mynetwork
+  #   volumes:
+  #     - wordpress_files:/var/www/html
+  #   restart: always
 
-  static-site:
-    build: ./requirements/bonus/static-site
-    ports:
-      - "8080:80"
-    networks:
-      - mynetwork
-    restart: always
+  # static-site:
+  #   build: ./requirements/bonus/static-site
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     - mynetwork
+  #   restart: always
 
-  adminer:
-    build: ./requirements/bonus/adminer
-    ports:
-      - "${ADMINER_PORT}:8080"
-    networks:
-      - mynetwork
-    restart: always
+  # adminer:
+  #   build: ./requirements/bonus/adminer
+  #   ports:
+  #     - "${ADMINER_PORT}:8080"
+  #   networks:
+  #     - mynetwork
+  #   restart: always
 
 volumes:
   mariadb_data:
