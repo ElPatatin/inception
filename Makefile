@@ -1,11 +1,11 @@
 all:
-	@$(MAKE) -s up
+	@$(MAKE) up
 
 up:
-	@docker compose -f ./srcs/docker-compose.yml up -d --build
+	@sudo docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
-	@docker compose -f ./srcs/docker-compose.yml down
+	@sudo docker-compose -f ./srcs/docker-compose.yml down
 
 clean:
 	@docker stop $$(docker ps -qa); \

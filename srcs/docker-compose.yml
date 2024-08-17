@@ -12,7 +12,7 @@ services:
       - mynetwork
     restart: always
     depends_on:
-      - mariadb
+      - wordpress
 
   mariadb:
     build: ./requirements/mariadb
@@ -40,6 +40,8 @@ services:
     networks:
       - mynetwork
     restart: always
+    depends_on:
+      - mariadb
   
   # Bonus services
   # redis:
