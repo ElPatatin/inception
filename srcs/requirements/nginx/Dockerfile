@@ -1,16 +1,31 @@
-# Using alpine
-FROM	debian:11-slim
+# Use the slim version of Debian for a lightweight base image
+FROM debian:11-slim
 
-# Installation of nginx
-RUN	apt-get update
-RUN	apt-get install -yy nginx openssl sudo-ldap
+# Install necessary packages
+RUN apt-get update && apt-get install -yy \
+    nginx \
+    openssl \
+    sudo-ldap \
+    && rm -rf /var/lib/apt/lists/*
 
-# Generate CSR (Certificate Signing Request) With OpenSSL
-RUN	mkdir /etc/nginx/ssl
-RUN	openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
-	-keyout /etc/nginx/ssl/cpeset-c.key \
-	-out /etc/nginx/ssl/cpeset-c.crt \
-	-subj "/C=ES/ST=Barcelona/L=Barcelona/O=42Barcelona/OU=cpeset-c/CN=cpeset-c"
+# Create directory for SSL certificates
+RUN mkdir -p /etc/nginx/ssl
+
+# Generate a self-signed SSL certificate
+RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
+    -keyout /etc/nginx/ssl/cpeset-c.key \
+    -out /etc/nginx/ssl/cpeset-c.crt \
+    -subj "/C=ES/ST=Barcelona/L=Barcelona/O=42Barcelona/OU=cpeset-c/CN=cpeset-c"
+
+# Copy the custom NGINX configuration file
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+
+# Expose ports for HTTP and HTTPS (443 is primary)
+EXPOSE 443 80
+
+# Set NGINX to run in the foreground by default
+CMD ["nginx", "-g", "daemon off;"]
+
 
 # OpenSSL options explained:
 #	req:	This subcommand specifies that we want to use X.509 certificate
@@ -45,9 +60,3 @@ RUN	openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
 #	-subj:	This fills the "subject" at the time of craeting the key.
 #		ex: C=ES means country is spain.
 #
-
-# Copy the configuration to the container
-COPY	./conf/nginx.conf /etc/nginx/conf.d/
-
-# Expose the 443 port, the only one allowed by the subject
-EXPOSE	443

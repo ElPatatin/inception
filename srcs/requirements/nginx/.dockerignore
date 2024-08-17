@@ -1,16 +1,36 @@
-#Ignore passwords file
-passwords.txt
+# Ignore unnecessary files and directories
 
-#Ignore logs directory
-logs/
+# Nginx logs
+/logs/*
+/var/log/nginx/*
 
-#Ignore the git and cache folders
+# Git-related files
 .git
-.cache
+.gitignore
 
-#Ingore all markdown and class files
-*.md
-**/*.class
+# Node modules and build directories
+node_modules
+build
+dist
 
-#Ignore ISO images
-*.iso
+# Temporary files and directories
+tmp
+temp
+*.tmp
+*.swp
+*.swo
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Configuration backups
+*.bak
+*.old
+*.orig
+
+# Editor and IDE files
+*.idea
+*.vscode
+*.sublime-project
+*.sublime-workspace

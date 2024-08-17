@@ -1,60 +1,83 @@
-version: '3'
+version: '3.7'
 
 services:
 
-  # Mandatory
+  # Main services
   nginx:
-    container_name: nginx
     build: ./requirements/nginx
     ports:
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
-      - webfiles:/var/www/html
+      - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - network
+      - mynetwork
     restart: always
 
   mariadb:
-    container_name: mariadb
     build: ./requirements/mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - database:/var/lib/mysql
-    env_file:
-      - .env
+      - mariadb_data:/var/lib/mysql
+      - ./requirements/mariadb/conf/custom-mariadb.cnf:/etc/mysql/my.cnf
     networks:
-      - network
+      - mynetwork
     restart: always
 
   wordpress:
-    container_name: wordpress
     build: ./requirements/wordpress
-    depends_on:
-      - mariadb
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
     volumes:
-      - webfiles:/var/www/html
-    env_file:
-      - .env
+      - wordpress_files:/var/www/html
     networks:
-      - network
+      - mynetwork
+    restart: always
+  
+  # Bonus services
+  redis:
+    build: ./requirements/bonus/redis
+    networks:
+      - mynetwork
     restart: always
 
-  # Bonus
+  ftp:
+    build: ./requirements/bonus/ftp
+    ports:
+      - "21:21"
+    networks:
+      - mynetwork
+    volumes:
+      - wordpress_files:/var/www/html
+    restart: always
+
+  static-site:
+    build: ./requirements/bonus/static-site
+    ports:
+      - "8080:80"
+    networks:
+      - mynetwork
+    restart: always
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    ports:
+      - "${ADMINER_PORT}:8080"
+    networks:
+      - mynetwork
+    restart: always
 
 volumes:
-  database:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/cpeset-c/Documents/mysql
-      o: bind
-
-  webfiles:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/cpeset-c/Documents/wordpress
-      o: bind
+  mariadb_data:
+  wordpress_files:
 
 networks:
-  network:
+  mynetwork:
     driver: bridge
