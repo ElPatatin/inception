@@ -21,7 +21,7 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 # Expose ports for HTTP and HTTPS (443 is primary)
-EXPOSE 443 80
+EXPOSE 443
 
 # Set NGINX to run in the foreground by default
 CMD ["nginx", "-g", "daemon off;"]
