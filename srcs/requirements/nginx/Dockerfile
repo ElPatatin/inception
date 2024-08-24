@@ -5,7 +5,6 @@ FROM debian:11-slim
 RUN apt-get update && apt-get install -yy \
     nginx \
     openssl \
-    sudo-ldap \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directory for SSL certificates
@@ -15,16 +14,20 @@ RUN mkdir -p /etc/nginx/ssl
 RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
     -keyout /etc/nginx/ssl/cpeset-c.key \
     -out /etc/nginx/ssl/cpeset-c.crt \
-    -subj "/C=ES/ST=Barcelona/L=Barcelona/O=42Barcelona/OU=cpeset-c/CN=cpeset-c"
+    -subj "/C=ES/ST=Barcelona/L=Barcelona/O=42Barcelona/OU=cpeset-c/CN=cpeset-c.42.fr"
+
+# Ensure the NGINX root directory exists
+RUN mkdir -p /var/www/html
 
 # Copy the custom NGINX configuration file
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose ports for HTTP and HTTPS (443 is primary)
+# Expose ports for HTTP and HTTPS
 EXPOSE 443
 
 # Set NGINX to run in the foreground by default
 CMD ["nginx", "-g", "daemon off;"]
+
 
 
 # OpenSSL options explained:
