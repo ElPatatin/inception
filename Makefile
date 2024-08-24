@@ -1,3 +1,5 @@
+SYSTEM = $(shell uname)
+
 all:
 	@$(MAKE) up
 
@@ -8,29 +10,27 @@ down:
 	@docker-compose -f ./srcs/docker-compose.yml down
 
 clean:
-	@$(MAKE) docker-stop docker-rm docker-rmi docker-volume-rm docker-network-rm
+	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
 
 docker-stop:
-ifeq ($(shell docker ps -q),)
+ifeq ($(shell docker ps -qa),)
 	@echo "No containers running"
 else
-	@docker stop $$(docker ps -q)
+	ifeq ($(SYSTEM),Linux,WSL,Darwin)
+		@kill -9 $$(docker inspect --format '{{.State.Pid}}' $$(docker ps -qa))
+		@echo "Stopped all processes in containers"
+	endif
+	@docker stop $$(docker ps -qa)
 	@echo "All containers stopped"
-endif
-
-docker-rm:
-ifeq ($(shell docker ps -a -q),)
-	@echo "No containers to remove"
-else
-	@docker rm $$(docker ps -a -q)
+	@docker rm $$(docker ps -qa)
 	@echo "All containers removed"
 endif
 
 docker-rmi:
-ifeq ($(shell docker images -q),)
+ifeq ($(shell docker images -qa),)
 	@echo "No images to remove"
 else
-	@docker rmi -f $$(docker images -q)
+	@docker rmi -f $$(docker images -qa)
 	@echo "All images removed"
 endif
 
@@ -54,4 +54,4 @@ re:
 	@$(MAKE) -s clean
 	@$(MAKE) -s all
 
-.PHONY: all up down clean re docker-stop docker-rm docker-rmi docker-volume-rm docker-network-rm
+.PHONY: all up down clean re docker-stop docker-rmi docker-volume-rm docker-network-rm
