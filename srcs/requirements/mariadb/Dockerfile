@@ -7,27 +7,28 @@ RUN apt-get update && apt-get install -yy \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/lib/mysqld /run/mysqld
-
-# Copy
-COPY ./conf/create_db.sql /tmp/create_db.sql
-
-# Copy configuration script
-COPY ./tools/entrypoint.sh ./
-RUN chmod +x ./entrypoint.sh
-
-# Copy the custom MariaDB configuration file
-COPY ./conf/mariadb.cnf /etc/my.cnf.d/
-COPY ./conf/mariadb.cnf /etc/mysql/mariadb.cnf
-
-RUN mariadb-install-db --datadir=/var/lib/mysql --auth-root-authentication-method=normal
-
-RUN chown -R mysql:mysql /var/lib/mysql
-
-RUN chown -R mysql:mysql /run/mysqld
+# Create the directory for the MariaDB socket
+RUN mkdir -p /var/run/mysqld \
+    && chown -R mysql:mysql /var/run/mysqld \
+    && chmod 777 /var/run/mysqld
 
 # Expose the default MariaDB port
 EXPOSE 3306
 
-# Set MariaDB to run in the foreground by default
-CMD [ "sh", "entrypoint.sh" ]
+# Copy the custom MariaDB configuration file
+COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf \
+    && chmod 777 /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# Copy the custom MariaDB entrypoint script
+COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh \
+    && chmod 777 /usr/local/bin/entrypoint.sh
+
+# Copy the custom MariaDB initialization script
+COPY ./tools/init_db.sql /usr/local/bin/init_db.sql \
+    && chmod 777 /usr/local/bin/init_db.sql
+
+# Set the entrypoint script to run by default
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Set the MariaDB server to run in the foreground by default
+CMD ["mysqld", "--bind-address=0.0.0.0"]

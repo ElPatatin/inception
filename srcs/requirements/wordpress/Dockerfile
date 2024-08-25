@@ -26,7 +26,7 @@ COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
 # Entrypoint script
 COPY ./tools/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod 777 /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Go to the working directory

@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -yy \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directory for SSL certificates
-RUN mkdir -p /etc/nginx/ssl
+RUN mkdir -p /etc/nginx/ssl \
+    && chmod 777 /etc/nginx/ssl
 
 # Generate a self-signed SSL certificate
 RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
@@ -21,14 +22,13 @@ RUN mkdir -p /var/www/html
 
 # Copy the custom NGINX configuration file
 COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
+RUN chmod 777 /etc/nginx/conf.d/default.conf
 
 # Expose ports for HTTP and HTTPS
 EXPOSE 443
 
 # Set NGINX to run in the foreground by default
 CMD ["nginx", "-g", "daemon off;"]
-
-
 
 # OpenSSL options explained:
 #	req:	This subcommand specifies that we want to use X.509 certificate
