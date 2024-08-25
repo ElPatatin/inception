@@ -3,7 +3,10 @@
 ### By [@cpeset-c](https://github.com/ElPatatin)
 
 > [!IMPORTANT]
-> If you want to host the wordpress on the domain https://cpeset-c.42.fr instead of https://localhost, you will need to add the line `127.0.0.1 cpeset-c.42.ft` to your /etc/hosts file.
+> If you want to host the wordpress on the domain https://cpeset-c.42.fr instead of https://localhost, you will need to add the line `127.0.0.1 cpeset-c.42.fr` to your /etc/hosts file.
+
+> [!IMPORTANT]
+> Most likely, you will need to configure your firewall. I used UFW.
 
 ## Table of contents
 

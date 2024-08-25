@@ -16,7 +16,7 @@ docker-stop:
 ifeq ($(shell docker ps -qa),)
 	@echo "No containers running"
 else
-	ifeq ($(SYSTEM),Linux,WSL,Darwin)
+	ifeq ($(SYSTEM),Linux)
 		@kill -9 $$(docker inspect --format '{{.State.Pid}}' $$(docker ps -qa))
 		@echo "Stopped all processes in containers"
 	endif
