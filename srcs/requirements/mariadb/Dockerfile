@@ -16,16 +16,16 @@ RUN mkdir -p /var/run/mysqld \
 EXPOSE 3306
 
 # Copy the custom MariaDB configuration file
-COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf \
-    && chmod 777 /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+RUN chown -R mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the custom MariaDB entrypoint script
-COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh \
-    && chmod 777 /usr/local/bin/entrypoint.sh
+COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 777 /usr/local/bin/entrypoint.sh
 
 # Copy the custom MariaDB initialization script
-COPY ./tools/init_db.sql /usr/local/bin/init_db.sql \
-    && chmod 777 /usr/local/bin/init_db.sql
+COPY ./tools/init.sql /usr/local/bin/init.sql
+RUN chmod 777 /usr/local/bin/init.sql
 
 # Set the entrypoint script to run by default
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
