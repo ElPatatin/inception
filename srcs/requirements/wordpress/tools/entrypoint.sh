@@ -1,29 +1,26 @@
 #!/bin/bash
 
+# Set up WordPress if it's not already installed
 if [ -f ./wp-config.php ]; then
     echo "WordPress already installed"
 else
     echo "WordPress not installed"
-
-    echo "Installing WordPress..."
-    wget https://wordpress.org/latest.tar.gz
-    tar -xvf latest.tar.gz
+    
+    echo "Downloading WordPress..."
+    wget https://wordpress.org/latest.tar.gz -O latest.tar.gz
+    tar -xzf latest.tar.gz --strip-components=1
     rm latest.tar.gz
-    mv wordpress/* ./
-    rm -rf wordpress
 
     echo "Configuring WordPress..."
-    sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" wp-config-sample.php
-    sed -i "s/username_here/$WORDPRESS_DB_USER/g" wp-config-sample.php
-    sed -i "s/password_here/$WORDPRESS_DB_PASSWORD/g" wp-config-sample.php
-    sed -i "s/localhost/$WORDPRESS_DB_HOST/g" wp-config-sample.php
     cp wp-config-sample.php wp-config.php
+    chown -R www-data:www-data /var/www/html
+    sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" wp-config.php
+    sed -i "s/username_here/$WORDPRESS_DB_USER/g" wp-config.php
+    sed -i "s/password_here/$WORDPRESS_DB_PASSWORD/g" wp-config.php
+    sed -i "s/localhost/$WORDPRESS_DB_HOST/g" wp-config.php
 
     echo "WordPress installed"
 fi
 
-# This will execute the CMD from the Dockerfile
+# Execute CMD from the Dockerfile
 exec "$@"
-
-# Exit immediately if a command exits with a non-zero status
-set -e

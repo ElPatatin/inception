@@ -37,6 +37,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mariadb
+    expose:
+      - "9000"
     env_file: .env
     volumes:
       - wordpress_files:/var/www/html

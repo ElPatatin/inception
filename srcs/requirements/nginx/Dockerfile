@@ -25,7 +25,7 @@ COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 RUN chmod 777 /etc/nginx/conf.d/default.conf
 
 # Expose ports for HTTP and HTTPS
-EXPOSE 443
+EXPOSE 443 80
 
 # Set NGINX to run in the foreground by default
 CMD ["nginx", "-g", "daemon off;"]
