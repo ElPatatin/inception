@@ -24,7 +24,7 @@ COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 777 /usr/local/bin/entrypoint.sh
 
 # Copy the custom MariaDB initialization script
-COPY ./tools/init.sql /usr/local/bin/init.sql
+COPY ./conf/init.sql /usr/local/bin/init.sql
 RUN chmod 777 /usr/local/bin/init.sql
 
 # Set the entrypoint script to run by default

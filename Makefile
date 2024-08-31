@@ -4,6 +4,8 @@ all:
 	@$(MAKE) up
 
 up:
+	@mkdir -p /home/$(USER)/data/db
+	@mkdir -p /home/$(USER)/data/wordpress
 	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
@@ -11,6 +13,10 @@ down:
 
 clean:
 	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
+
+fclean:
+	@$(MAKE) down
+	@$(MAKE) clean
 
 docker-stop:
 ifeq ($(shell docker ps -qa),)
@@ -42,16 +48,8 @@ else
 	@echo "All volumes removed"
 endif
 
-docker-network-rm:
-ifeq ($(shell docker network ls -q),)
-	@echo "No networks to remove"
-else
-	@docker network rm $$(docker network ls -q)
-	@echo "All networks removed"
-endif
-
 re:
-	@$(MAKE) -s clean
+	@$(MAKE) -s down
 	@$(MAKE) -s all
 
 .PHONY: all up down clean re docker-stop docker-rmi docker-volume-rm docker-network-rm

@@ -1,14 +1,29 @@
 services:
-
   # Main services
+
+  # Nginx service
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_files:/var/www/html
+    networks:
+      - mynetwork
+    restart: always
+
+  # MariaDB service
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    env_file: .env
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
@@ -17,35 +32,41 @@ services:
 
   wordpress:
     container_name: wordpress
-    build: ./requirements/wordpress
-    environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    depends_on:
+      - mariadb
+    env_file: .env
     volumes:
       - wordpress_files:/var/www/html
     networks:
       - mynetwork
     restart: always
-    depends_on:
-      - mariadb
 
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx
-    ports:
-      - "443:443"
-    networks:
-      - mynetwork
-    restart: always
-    depends_on:
-      - wordpress
+  # Bonus services
+
+  # ...
+
   
 volumes:
+  # MariaDB volume
   mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/db
+      o: bind
+  
+  # Wordpress volume
   wordpress_files:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/wordpress
+      o: bind
 
 networks:
+  # Main network
   mynetwork:
     driver: bridge
