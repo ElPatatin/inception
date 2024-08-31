@@ -13,6 +13,7 @@ down:
 
 clean:
 	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
+	@rm -rf /home/$(USER)/data
 
 fclean:
 	@$(MAKE) down
