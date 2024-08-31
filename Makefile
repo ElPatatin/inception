@@ -6,10 +6,10 @@ all:
 up:
 	@mkdir -p /home/$(USER)/data/db
 	@mkdir -p /home/$(USER)/data/wordpress
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yaml up -d --build
 
 down:
-	@docker-compose -f ./srcs/docker-compose.yml down
+	@docker-compose -f ./srcs/docker-compose.yaml down
 
 clean:
 	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
