@@ -16,8 +16,8 @@ RUN mkdir -p /var/run/mysqld \
 EXPOSE 3306
 
 # Copy the custom MariaDB configuration file
-COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-RUN chown -R mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
+# COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+# RUN chown -R mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the custom MariaDB entrypoint script
 COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh

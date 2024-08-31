@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # Install MYSQL
-mysql_install_db --user=mysql --datadir=/var/lib/mysql
+mysql_install_db #--user=mysql --datadir=/var/lib/mysql
 
 # Start MYSQL
-mysqld --user=mysql --init-file=/init.sql &
-# /etc/init.d/mysql start
+# mysqld --user=mysql --init-file=/init.sql &
+/etc/init.d/mysql start
 
 # Create database
 if [ ! -d "/var/lib/mysql${MYSQL_DATABASE}" ]; then
-    mysql_secure_installation <<EOF
+    mysql_secure_installation << _EOF_
+
 Y
 ${MYSQL_ROOT_PASSWORD}
 ${MYSQL_ROOT_PASSWORD}
@@ -17,7 +18,8 @@ Y
 n
 Y
 Y
-EOF
+
+_EOF_
 
     mysql -u root -e "CREATE DATABASE ${MYSQL_DATABASE};"
     mysql -u root -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"

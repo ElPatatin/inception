@@ -7,8 +7,8 @@ services:
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    depends_on:
-      - wordpress
+    # depends_on:
+    #   - wordpress
     ports:
       - "443:443"
     volumes:
@@ -23,6 +23,8 @@ services:
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
     env_file: .env
     volumes:
       - mariadb_data:/var/lib/mysql
@@ -37,8 +39,8 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mariadb
-    expose:
-      - "9000"
+    ports:
+      - "9000:9000"
     env_file: .env
     volumes:
       - wordpress_files:/var/www/html
@@ -53,20 +55,27 @@ services:
   
 volumes:
   # MariaDB volume
-  mariadb_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/${USER}/data/db
-      o: bind
+  mariadb_data: {}
   
   # Wordpress volume
-  wordpress_files:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/${USER}/data/wordpress
-      o: bind
+  wordpress_files: {}
+
+# volumes:
+#   # MariaDB volume
+#   mariadb_data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /home/${USER}/data/db
+#       o: bind
+  
+#   # Wordpress volume
+#   wordpress_files:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /home/${USER}/data/wordpress
+#       o: bind
 
 networks:
   # Main network

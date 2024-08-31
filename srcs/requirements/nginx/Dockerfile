@@ -17,15 +17,16 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
     -out /etc/nginx/ssl/cpeset-c.crt \
     -subj "/C=ES/ST=Barcelona/L=Barcelona/O=42Barcelona/OU=cpeset-c/CN=cpeset-c.42.fr"
 
-# Ensure the NGINX root directory exists
-RUN mkdir -p /var/www/html
-
 # Copy the custom NGINX configuration file
 COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 RUN chmod 777 /etc/nginx/conf.d/default.conf
 
+# Ensure the NGINX root directory exists
+RUN mkdir -p /var/www/html \
+    && chmod 777 /var/www/html
+
 # Expose ports for HTTP and HTTPS
-EXPOSE 443 80
+EXPOSE 443
 
 # Set NGINX to run in the foreground by default
 CMD ["nginx", "-g", "daemon off;"]
