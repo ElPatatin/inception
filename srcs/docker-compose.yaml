@@ -55,27 +55,20 @@ services:
   
 volumes:
   # MariaDB volume
-  mariadb_data: {}
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/db
+      o: bind
   
   # Wordpress volume
-  wordpress_files: {}
-
-# volumes:
-#   # MariaDB volume
-#   mariadb_data:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: /home/${USER}/data/db
-#       o: bind
-  
-#   # Wordpress volume
-#   wordpress_files:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: /home/${USER}/data/wordpress
-#       o: bind
+  wordpress_files:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/wordpress
+      o: bind
 
 networks:
   # Main network

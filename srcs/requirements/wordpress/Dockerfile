@@ -3,13 +3,13 @@ FROM debian:11-slim
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     php7.3 \
-    php7.3-cli \
-    php7.3-cgi \
-    php7.3-fpm \
-    php7.3-mysql \
-    php7.3-gd \
-    php7.3-xml \
-    php7.3-curl \
+    php-cli \
+    php-cgi \
+    php-fpm \
+    php-mysql \
+    php-gd \
+    php-xml \
+    php-curl \
     curl \
     wget \
     unzip \
@@ -34,7 +34,7 @@ RUN chmod 777 /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Go to the working directory
-WORKDIR /var/www/html
+WORKDIR /var/www/html 
 
 # Expose port
 EXPOSE 9000
