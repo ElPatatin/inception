@@ -69,7 +69,7 @@ echo "Installing Vim..."
 sudo apt-get install -y vim
 
 # Modify /etc/hosts
-HOST_ENTRY="127.0.0.1 $(whoami)-c.42.fr"
+HOST_ENTRY="127.0.0.1 $(whoami).42.fr"
 if ! grep -q "$HOST_ENTRY" /etc/hosts; then
     echo "Adding $HOST_ENTRY to /etc/hosts"
     echo "$HOST_ENTRY" | sudo tee -a /etc/hosts > /dev/null

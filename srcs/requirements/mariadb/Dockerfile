@@ -15,7 +15,7 @@ RUN mkdir -p /var/run/mysqld \
 # Expose the default MariaDB port
 EXPOSE 3306
 
-Copy the custom MariaDB configuration file
+# Copy the custom MariaDB configuration file
 COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chown -R mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
 
