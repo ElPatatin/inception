@@ -39,4 +39,4 @@ WORKDIR /var/www/html
 # Expose port
 EXPOSE 9000
 
-CMD ["/usr/sbin/php-fpm7.4", "-F"]
+CMD ["php-fpm7.4", "-F"]

@@ -1,34 +1,26 @@
-# Use the slim version of Debian for a lightweight base image
+# Use Debian as a base image
 FROM debian:11-slim
 
-# Install the necessary packages
-RUN apt-get update && apt-get install -yy \
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
     mariadb-server \
-    mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Create the directory for the MariaDB socket
-RUN mkdir -p /var/run/mysqld \
-    && chown -R mysql:mysql /var/run/mysqld \
-    && chmod 777 /var/run/mysqld
+
+# Copy the MariaDB configuration file
+COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/init.cnf
+
+# Copy the entrypoint script
+COPY ./tools/entrypoint.sh /etc/
+RUN chmod a+x /etc/entrypoint.sh
+
+# Create necessary directories and set permissions
+RUN mkdir -p /var/run/mysqld && \
+    chown -R mysql:mysql /var/run/mysqld && \
+    chmod 775 /var/run/mysqld
 
 # Expose the default MariaDB port
 EXPOSE 3306
 
-# Copy the custom MariaDB configuration file
-COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-RUN chown -R mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
-
-# Copy the custom MariaDB entrypoint script
-COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod 777 /usr/local/bin/entrypoint.sh
-
-# Copy the custom MariaDB initialization script
-COPY ./conf/init.sql /usr/local/bin/init.sql
-RUN chmod 777 /usr/local/bin/init.sql
-
-# Set the entrypoint script to run by default
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# Set the MariaDB server to run in the foreground by default
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+# Command to run MariaDB in the foreground
+ENTRYPOINT ["/etc/entrypoint.sh"]
