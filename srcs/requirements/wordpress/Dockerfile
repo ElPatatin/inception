@@ -2,7 +2,7 @@ FROM debian:11-slim
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    php7.3 \
+    php7.4 \
     php-cli \
     php-cgi \
     php-fpm \
@@ -26,7 +26,7 @@ RUN mkdir -p /var/www/html /run/php && \
     chown -R www-data:www-data /var/www/html /run/php
 
 # Copy custom configuration
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/
 
 # Entrypoint script
 COPY ./tools/entrypoint.sh /usr/local/bin/
@@ -39,4 +39,4 @@ WORKDIR /var/www/html
 # Expose port
 EXPOSE 9000
 
-CMD ["/usr/sbin/php-fpm7.3", "-F"]
+CMD ["/usr/sbin/php-fpm7.4", "-F"]

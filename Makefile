@@ -13,20 +13,17 @@ down:
 
 clean:
 	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
-	@rm -rf /home/$(USER)/data
+	@sudo rm -rf /home/$(USER)/data
 
 fclean:
 	@$(MAKE) down
 	@$(MAKE) clean
 
 docker-stop:
+# @kill -9 $$(docker inspect --format '{{.State.Pid}}' $$(docker ps -qa))
 ifeq ($(shell docker ps -qa),)
 	@echo "No containers running"
 else
-	ifeq ($(SYSTEM),Linux)
-		@kill -9 $$(docker inspect --format '{{.State.Pid}}' $$(docker ps -qa))
-		@echo "Stopped all processes in containers"
-	endif
 	@docker stop $$(docker ps -qa)
 	@echo "All containers stopped"
 	@docker rm $$(docker ps -qa)
@@ -34,10 +31,10 @@ else
 endif
 
 docker-rmi:
-ifeq ($(shell docker images -qa),)
+ifeq ($(shell docker image ls -q),)
 	@echo "No images to remove"
 else
-	@docker rmi -f $$(docker images -qa)
+	@docker rmi $$(docker image ls -q)
 	@echo "All images removed"
 endif
 
