@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Install MYSQL
-mysql_install_db #--user=mysql --datadir=/var/lib/mysql
+mysql_install_db
 
 # Start MYSQL
-# mysqld --user=mysql --init-file=/init.sql &
 /etc/init.d/mysql start
 
 # Create database
@@ -30,8 +29,8 @@ _EOF_
 
     mysql -u root -e "FLUSH PRIVILEGES;"
 
-    if [ -f "/init.sql" ]; then
-        mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} < /init.sql
+    if [ -f "/usr/local/bin/init.sql" ]; then
+        mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} < /usr/local/bin/init.sql
     fi
 
     echo "Database created"
@@ -39,9 +38,6 @@ else
     echo "Database already exists"
 fi
 
-# Stop MYSQL
-# killall mysqld
-# sleep 10
 /etc/init.d/mysql stop
 
 exec "$@"

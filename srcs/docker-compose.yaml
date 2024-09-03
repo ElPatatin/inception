@@ -15,7 +15,7 @@ services:
       - wordpress_files:/var/www/html
     networks:
       - mynetwork
-    restart: always
+    restart: unless-stopped
 
   # MariaDB service
   mariadb:
@@ -30,7 +30,7 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - mynetwork
-    restart: always
+    restart: unless-stopped
 
   wordpress:
     container_name: wordpress
@@ -46,7 +46,7 @@ services:
       - wordpress_files:/var/www/html
     networks:
       - mynetwork
-    restart: always
+    restart: unless-stopped
 
   # Bonus services
 

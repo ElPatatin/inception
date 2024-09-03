@@ -12,8 +12,7 @@ down:
 	@docker-compose -f ./srcs/docker-compose.yaml down
 
 clean:
-	@$(MAKE) docker-stop docker-rmi docker-volume-rm docker-network-rm
-	@sudo rm -rf /home/$(USER)/data
+	@$(MAKE) docker-stop docker-rmi docker-volume-rm
 
 fclean:
 	@$(MAKE) down
