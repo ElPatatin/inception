@@ -2,7 +2,7 @@
 user = mysql
 port = 3306
 
-pid = /run/mysqld/mysqld.pid
+pid_file = /run/mysqld/mysqld.pid
 socket = /run/mysqld/mysqld.sock
 
 basedir = /usr
@@ -17,4 +17,3 @@ query_cache_size = 16M
 log_error = /var/log/mysql/error.log
 
 character-set-server = utf8
-collation_server = utf8mb4_general_ci
