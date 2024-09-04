@@ -25,4 +25,4 @@ userlist_file=/etc/vsftpd.userlist" >> /etc/vsftpd.conf
 
 # service vsftpd restart
 service vsftpd stop
-/usr/sbin/vsftpd
+/usr/sbin/vsftpd /etc/vsftpd.conf
