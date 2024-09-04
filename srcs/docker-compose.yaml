@@ -3,7 +3,7 @@ services:
 
   # Nginx service
   nginx:
-    # image: nginx:latest
+    image: nginx:1.26.2
     container_name: nginx
     build:
       context: ./requirements/nginx
@@ -20,7 +20,7 @@ services:
 
   # MariaDB service
   mariadb:
-    # image: mariadb:latest
+    image: mariadb:10.11
     container_name: mariadb
     build:
       context: ./requirements/mariadb
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   wordpress:
-    # image: wordpress:latest
+    image: wordpress:5.7.2-php7.4-apache
     container_name: wordpress
     build:
       context: ./requirements/wordpress

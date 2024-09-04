@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
 COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/init.cnf
 
 # Copy the entrypoint script
-COPY ./tools/entrypoint.sh /etc/
-RUN chmod a+x /etc/entrypoint.sh
+COPY ./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/run/mysqld && \
@@ -23,4 +23,4 @@ RUN mkdir -p /var/run/mysqld && \
 EXPOSE 3306
 
 # Command to run MariaDB in the foreground
-ENTRYPOINT ["/etc/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

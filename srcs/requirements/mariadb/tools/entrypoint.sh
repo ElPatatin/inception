@@ -1,16 +1,11 @@
 #!/bin/bash
 
-# Install MYSQL
-# mysql_install_db
-
 # Start MYSQL
 
 service mariadb start
 
-
-# Create database
+# Install MYSQL
 mysql_secure_installation << _EOF_
-
 n
 Y
 $MYSQL_ROOT_PASSWORD
