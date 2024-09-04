@@ -33,7 +33,7 @@ docker-rmi:
 ifeq ($(shell docker image ls -q),)
 	@echo "No images to remove"
 else
-	@docker rmi $$(docker image ls -q)
+	@docker image rm -f $$(docker image ls -q)
 	@echo "All images removed"
 endif
 

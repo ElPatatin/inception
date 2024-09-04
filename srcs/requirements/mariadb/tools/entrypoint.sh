@@ -1,31 +1,25 @@
 #!/bin/bash
 
-# Start MYSQL
-
+# Start MariaDB
 service mariadb start
 
-# Install MYSQL
-mysql_secure_installation << _EOF_
-n
-Y
-$MYSQL_ROOT_PASSWORD
-$MYSQL_ROOT_PASSWORD
-Y
-Y
-Y
-Y
-_EOF_
+# Wait for MariaDB to be fully up and running
+# until mysqladmin ping >/dev/null 2>&1; do
+#     echo "Waiting for MariaDB to start..."
+#     sleep 3
+# done
 
-if [ ! -d "/var/lib/mysql${MYSQL_DATABASE}" ]; then
-    mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE DATABASE ${MYSQL_DATABASE};"
-    mysql -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-    mysql -e "GRANT ALL ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' WITH GRANT OPTION;"
+if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
+    echo "Creating database..."
+    mysql -u$MYSQL_ROOT_USER -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE $MYSQL_DATABASE;"
+    mysql -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+    mysql -e "GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD' WITH GRANT OPTION;"
     mysql -e "FLUSH PRIVILEGES;"
-    echo "Database created"
 else
-    echo "Database already exists"
+    echo "Database already exists."
 fi
 
-service mariadb stopss
+mysqladmin -u$MYSQL_ROOT_USER -p$MYSQL_ROOT_PASSWORD shutdown
 
-exec "$@"
+# Start MariaDB in the foreground
+mysqld
