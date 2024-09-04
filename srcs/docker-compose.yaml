@@ -53,6 +53,54 @@ services:
 
   # Bonus services
 
+  ftp:
+    container_name: ftp
+    image: ftp
+    build:
+      context: ./requirements/bonus/ftp
+      dockerfile: Dockerfile
+    # dependes_on:
+    #   - wordpress
+    ports:
+      - "20:20"
+      - "21:21"
+      - "21100-21110:21100-21110"
+    volumes:
+      - wordpress_files:/var/www/html
+    networks:
+      - mynetwork
+    environment:
+      FTP_USER: ${FTP_USER}
+      FTP_PASSWORD: ${FTP_PASSWORD}
+    restart: unless-stopped
+
+  cadvisor:
+    container_name: cadvisor
+    image: cadvisor
+    build:
+      context: ./requirements/bonus/cadvisor
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+
+  website:
+    container_name: website
+    build: ./requirements/bonus/static-site/.
+    image: website:42
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
   # ...
 
   
