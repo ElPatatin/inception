@@ -4,12 +4,10 @@ services:
   # Nginx service
   nginx:
     container_name: nginx
-    image: nginx #:1.26.2
+    image: nginx
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
-    # depends_on:
-    #   - wordpress
     ports:
       - "443:443"
     volumes:
@@ -21,7 +19,7 @@ services:
   # MariaDB service
   mariadb:
     container_name: mariadb
-    image: mariadb #:10.11
+    image: mariadb
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
@@ -34,9 +32,10 @@ services:
       - mynetwork
     restart: unless-stopped
 
+  # Wordpress service
   wordpress:
     container_name: wordpress
-    image: wordpress #:5.7.2-php7.4-apache
+    image: wordpress
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
@@ -53,14 +52,13 @@ services:
 
   # Bonus services
 
+  # FTP service
   ftp:
     container_name: ftp
     image: ftp
     build:
       context: ./requirements/bonus/ftp
       dockerfile: Dockerfile
-    # dependes_on:
-    #   - wordpress
     ports:
       - "20:20"
       - "21:21"
@@ -74,6 +72,7 @@ services:
       FTP_PASSWORD: ${FTP_PASSWORD}
     restart: unless-stopped
 
+  # Cadvisor service
   cadvisor:
     container_name: cadvisor
     image: cadvisor
@@ -91,10 +90,13 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     restart: unless-stopped
 
+  # Static-site service
   website:
     container_name: website
-    build: ./requirements/bonus/static-site/.
-    image: website:42
+    image: website
+    build:
+      context: ./requirements/bonus/static-site
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
@@ -103,7 +105,6 @@ services:
 
   # ...
 
-  
 volumes:
   # MariaDB volume
   mariadb_data:

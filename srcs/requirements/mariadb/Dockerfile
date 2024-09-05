@@ -25,3 +25,6 @@ RUN mysql_install_db
 
 # Command to run MariaDB in the foreground
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Start MariaDB
+CMD ["mysqld"]

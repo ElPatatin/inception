@@ -19,10 +19,11 @@ local_enable=YES
 allow_writeable_chroot=YES
 pasv_enable=YES
 local_root=/var/www/html/ftp
-pasv_min_port=40000
-pasv_max_port=40005
+pasv_min_port=21100
+pasv_max_port=21110
 userlist_file=/etc/vsftpd.userlist" >> /etc/vsftpd.conf
 
 # service vsftpd restart
 service vsftpd stop
-/usr/sbin/vsftpd /etc/vsftpd.conf
+
+exec "$@"

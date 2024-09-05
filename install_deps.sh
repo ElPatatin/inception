@@ -13,13 +13,13 @@ sudo apt-get update
 echo "Installing make..."
 sudo apt-get install -y make
 
-# Install UFW and open required ports
-echo "Installing ufw and setting up firewall rules..."
-sudo apt-get install -y ufw
-sudo ufw allow 443/tcp
-sudo ufw allow 9000/tcp
-sudo ufw allow 3306/tcp
-sudo ufw --force enable
+# Install git
+echo "Installing git..."
+sudo apt-get install -y git
+
+# Install curl
+echo "Installing curl..."
+sudo apt-get install -y curl
 
 # Install Docker
 echo "Installing Docker..."

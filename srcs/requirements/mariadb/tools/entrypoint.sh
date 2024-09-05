@@ -17,4 +17,4 @@ fi
 mysqladmin -u $MYSQL_ROOT_USER --password=$MYSQL_ROOT_PASSWORD shutdown
 
 # Start MariaDB in the foreground
-mysqld
+exec "$@"
